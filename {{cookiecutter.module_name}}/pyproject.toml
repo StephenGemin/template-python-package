@@ -1,0 +1,89 @@
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#writing-pyproject-toml
+[project]
+name = '{{cookiecutter.project_name}}'
+dynamic = ['version']
+description = '{{cookiecutter.short_description}}'
+requires-python = '>=3.11'
+dependencies = []
+authors = [
+  {name = '{{cookiecutter.author_name}}', email = '{{cookiecutter.author_email}}'},
+]
+readme = 'README.md'
+license = {file = 'LICENSE'}
+keywords = []
+classifiers = [ 
+  # Full List: https://pypi.org/classifiers/
+]
+
+[dependency-groups]
+dev = [
+  'pytest',
+  'coverage',
+  'black',
+  'pre-commit',
+  'ruff'
+]
+
+[build-system]
+requires = ['uv_build>=0.7.19,<0.8.0']
+build-backend = 'uv_build'
+
+[project.urls]
+Homepage = 'https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_name}}/'
+# Documentation = 'https://readthedocs.org'
+Repository = 'https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_name}}/'
+Issues = 'https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_name}}/issues'
+# Changelog = 'https://github.com/me/spam/blob/master/CHANGELOG.md'
+
+
+[tool.black]
+required-version = 25
+
+[tool.isort]
+profile = 'black'
+
+[tool.ruff.lint]
+select = [
+    'B',        # flake8-bugbear,
+    'C9',       # mccabe
+    'C4',       # flake8-comprehensions
+    'E', 'W',   # pycodestyle
+    'F',        # pyflakes
+    'I',        # isort
+    'ISC',      # flake8-implicit-str-concat
+    'N',        # pep8-naming
+    'PL',       # pylint
+    'RUF',      # Ruff specific rules
+]
+# Never enforce `E501` (line length violations)
+ignore = ['E501']
+
+[tool.ruff.lint.per-file-ignores]
+# Don't complaine about unused imports in __init__.py
+'__init__.py' = ['F401', 'F403']
+
+
+[tool.pytest.ini_options]
+# pytest configuration; https://docs.pytest.org/en/7.2.x/reference/customize.html
+testpaths = 'tests'
+
+[tool.coverage.run]
+branch = true
+source = ['src']
+parallel = true
+
+[tool.coverage.report]
+omit = ['tests/']
+exclude_also = [
+  'pragma: no cover',
+  'def __repr__',
+  'if self.debug:',
+  'if settings.DEBUG',
+  'raise AssertionError',
+  'raise NotImplementedError',
+  'if 0:',
+  'if __name__ == .__main__.:',
+  'if TYPE_CHECKING:',
+  'class.*\bProtocol\b):',
+  '@(abc\.)?abstractmethod',
+]
