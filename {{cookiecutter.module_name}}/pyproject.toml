@@ -1,7 +1,11 @@
 # https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#writing-pyproject-toml
+[build-system]
+requires = ['hatchling']
+build-backend = 'hatchling.build'
+
 [project]
 name = '{{cookiecutter.project_name}}'
-dynamic = ['version']
+version = '0.1.0'
 description = '{{cookiecutter.short_description}}'
 requires-python = '>=3.11'
 dependencies = []
@@ -23,10 +27,6 @@ dev = [
   'pre-commit',
   'ruff'
 ]
-
-[build-system]
-requires = ['uv_build>=0.7.19,<0.8.0']
-build-backend = 'uv_build'
 
 [project.urls]
 Homepage = 'https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_name}}/'
@@ -66,6 +66,7 @@ ignore = ['E501']
 [tool.pytest.ini_options]
 # pytest configuration; https://docs.pytest.org/en/7.2.x/reference/customize.html
 testpaths = 'tests'
+addopts = '--import-mode=importlib --strict-markers'
 
 [tool.coverage.run]
 branch = true
