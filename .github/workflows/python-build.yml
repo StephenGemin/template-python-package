@@ -28,19 +28,20 @@ jobs:
       run: |
         git config --global user.email "you@example.com"
         git config --global user.name "Your Name"
-    - run: pipx install cookiecutter
-    - name: Cut cookies
-      run: cookiecutter --no-input --overwrite-if-exists .
     - name: Install uv
       uses: astral-sh/setup-uv@v5
-    - run: uv lock
-      working-directory: ${{ env.NEW_COOKIE_REPO }}
+    - run: uv venv && uv pip sync requirements.txt
+    - name: Cut cookies
+      run: uv run cookiecutter --no-input --overwrite-if-exists .
     - name: Install dependencies
       run: uv sync
       working-directory: ${{ env.NEW_COOKIE_REPO }}
     - name: Run unit-tests
       run: uv run pytest
       working-directory: ${{ env.NEW_COOKIE_REPO }}
-    - name: Lint ruff
+    - name: Lint
       run: uv run ruff check .
+      working-directory: ${{ env.NEW_COOKIE_REPO }}
+    - name: Format
+      run: uv run black --check --diff .
       working-directory: ${{ env.NEW_COOKIE_REPO }}

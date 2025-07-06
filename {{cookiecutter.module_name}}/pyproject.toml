@@ -1,11 +1,17 @@
-# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#writing-pyproject-toml
 [build-system]
-requires = ['hatchling']
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#writing-pyproject-toml
+# TODO: use third party until uv natively supports dynamic versioning
+# Issues: 8714, 14037, 11718
+requires = ['hatchling >= 1.26', 'uv-dynamic-versioning']
 build-backend = 'hatchling.build'
+
+[tool.hatch.version]
+# TODO: remove when uv natively supports dynamic versioning
+source = "uv-dynamic-versioning"
 
 [project]
 name = '{{cookiecutter.project_name}}'
-version = '0.1.0'
+dynamic = ['version']
 description = '{{cookiecutter.short_description}}'
 requires-python = '>=3.11'
 dependencies = []
@@ -15,17 +21,19 @@ authors = [
 readme = 'README.md'
 license = {file = 'LICENSE'}
 keywords = []
-classifiers = [ 
+classifiers = [
   # Full List: https://pypi.org/classifiers/
 ]
 
 [dependency-groups]
 dev = [
   'pytest',
+  'pytest-timeout',
+  'pytest-randomly',
   'coverage',
-  'black',
   'pre-commit',
-  'ruff'
+  'ruff',
+  'black'
 ]
 
 [project.urls]
@@ -55,7 +63,7 @@ select = [
     'PL',       # pylint
     'RUF',      # Ruff specific rules
 ]
-# Never enforce `E501` (line length violations)
+# Never enforce `E501` (line length violations), leave it up to the formatter
 ignore = ['E501']
 
 [tool.ruff.lint.per-file-ignores]
@@ -67,6 +75,7 @@ ignore = ['E501']
 # pytest configuration; https://docs.pytest.org/en/7.2.x/reference/customize.html
 testpaths = 'tests'
 addopts = '--import-mode=importlib --strict-markers'
+timeout = 5
 
 [tool.coverage.run]
 branch = true
