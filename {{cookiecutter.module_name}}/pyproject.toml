@@ -7,13 +7,13 @@ build-backend = 'hatchling.build'
 
 [tool.hatch.version]
 # TODO: remove when uv natively supports dynamic versioning
-source = "uv-dynamic-versioning"
+source = 'uv-dynamic-versioning'
 
 [project]
 name = '{{cookiecutter.project_name}}'
 dynamic = ['version']
 description = '{{cookiecutter.short_description}}'
-requires-python = '>=3.11'
+requires-python = '>=3.10'
 dependencies = []
 authors = [
   {name = '{{cookiecutter.author_name}}', email = '{{cookiecutter.author_email}}'},
@@ -63,37 +63,42 @@ select = [
     'PL',       # pylint
     'RUF',      # Ruff specific rules
 ]
-# Never enforce `E501` (line length violations), leave it up to the formatter
-ignore = ['E501']
+ignore = [
+    'E501'  # Never enforce line length violations, leave it up to the formatter
+]
 
 [tool.ruff.lint.per-file-ignores]
-# Don't complaine about unused imports in __init__.py
-'__init__.py' = ['F401', 'F403']
+'__init__.py' = [
+    'F401'  # unused imports
+]
 
 
 [tool.pytest.ini_options]
-# pytest configuration; https://docs.pytest.org/en/7.2.x/reference/customize.html
-testpaths = 'tests'
+# https://docs.pytest.org/en/stable/explanation/goodpractices.html#tests-outside-application-code
+pythonpath = "src"
 addopts = '--import-mode=importlib --strict-markers'
+testpaths = 'tests'
 timeout = 5
 
 [tool.coverage.run]
 branch = true
 source = ['src']
-parallel = true
 
 [tool.coverage.report]
 omit = ['tests/']
+# fail_under = 80
+precision = 2
+show_missing = true
 exclude_also = [
   'pragma: no cover',
   'def __repr__',
-  'if self.debug:',
+  'if self\\.debug:',
   'if settings.DEBUG',
   'raise AssertionError',
   'raise NotImplementedError',
   'if 0:',
   'if __name__ == .__main__.:',
   'if TYPE_CHECKING:',
-  'class.*\bProtocol\b):',
+  'class.*\(\bProtocol\b\):',
   '@(abc\.)?abstractmethod',
 ]

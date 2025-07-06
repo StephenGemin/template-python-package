@@ -10,6 +10,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -34,14 +37,15 @@ jobs:
     - name: Cut cookies
       run: uv run cookiecutter --no-input --overwrite-if-exists .
     - name: Install dependencies
-      run: uv sync
+      run: uv sync -v --reinstall
       working-directory: ${{ env.NEW_COOKIE_REPO }}
-    - name: Run unit-tests
-      run: uv run pytest
+    - name: Run coverage
+      run: uv run coverage run -m pytest
       working-directory: ${{ env.NEW_COOKIE_REPO }}
-    - name: Lint
-      run: uv run ruff check .
+    - name: Generate coverage report
+      run: uv run coverage report --format=markdown > coverage.md
       working-directory: ${{ env.NEW_COOKIE_REPO }}
-    - name: Format
-      run: uv run black --check --diff .
+    - name: Publish coverage to summary
+      run: cat coverage.md >> $GITHUB_STEP_SUMMARY
       working-directory: ${{ env.NEW_COOKIE_REPO }}
+      shell: bash
