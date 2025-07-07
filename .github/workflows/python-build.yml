@@ -37,7 +37,9 @@ jobs:
     - name: Cut cookies
       run: uv run cookiecutter --no-input --overwrite-if-exists .
     - name: Install dependencies
-      run: uv sync -v --reinstall
+      run: uv sync -v
+      working-directory: ${{ env.NEW_COOKIE_REPO }}
+    - run: uv run pre-commit run -a
       working-directory: ${{ env.NEW_COOKIE_REPO }}
     - name: Run coverage
       run: uv run coverage run -m pytest

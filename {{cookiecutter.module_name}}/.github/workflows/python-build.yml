@@ -34,7 +34,7 @@ jobs:
     - name: Lint
       run: uv run ruff check --output-format=github .
     - name: Format
-      run: uv run black --check --diff .
+      run: uv run ruff format --check --diff .
     - name: Run coverage
       run: uv run coverage run -m pytest
     - name: Generate coverage report
